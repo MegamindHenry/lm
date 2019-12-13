@@ -18,7 +18,7 @@ def save_seq(path, sequences):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='prepare context words for tasa corpus')
     parser.add_argument('-cw', action="store", dest="context_win", type=int, default=5, help='set context windows')
-    parser.add_argument('-sp', action="store", dest="save_path", type=str, default='../data/', help='set save path')
+    parser.add_argument('-sp', action="store", dest="save_path", type=str, default='../trained/', help='set save path')
 
     args = parser.parse_args()
     context_win = args.context_win
