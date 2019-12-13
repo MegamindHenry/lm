@@ -25,17 +25,18 @@ if __name__ == '__main__':
 
     lines = load_seq(file)
 
-    print('Prepare tokenizer...')
+    print('Preparing tokenizer...')
     tokenizer = Tokenizer(None, filters='')
     tokenizer.fit_on_texts(lines)
 
     vocab_size = len(tokenizer.word_index) + 1
     print('vocab_size: {}'.format(vocab_size))
 
-    print('Transform to sequences...')
+    print('Transforming to sequences...')
     sequences = tokenizer.texts_to_sequences(lines)
     sequences = np.array(sequences)
     print('sequences shape: {}'.format(sequences.shape))
 
+    print('Saving files...')
     dump(tokenizer, open(tokenizer_path + 'tokenizer.pkl', 'wb'))
-    np.save(tokenizer_path + 'sequences', sequences)
+    # dump(sequences, open(tokenizer_path + 'sequences.pkl', 'wb'))
