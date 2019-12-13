@@ -1,6 +1,6 @@
 from lm_lib.text import TasaText
 from nltk.tokenize import word_tokenize
-import progressbar
+from tqdm import tqdm
 
 
 def read_tasa(file):
@@ -11,9 +11,7 @@ def read_tasa(file):
     """
     with open(file, 'r', encoding='utf8') as fp:
         corpus = fp.read()
-        # texts = corpus.split('\n\n')
-        # texts = [TasaText.from_text(text) if  for text in corpus.split('\n\n')]
-
+        
         tts = []
         for text in corpus.split('\n\n'):
             tt = TasaText.from_text(text)
@@ -25,12 +23,10 @@ def read_tasa(file):
 
 def prepare_sequences_tasatext(tts, context_win=5):
     sequences = []
-    length = len(tts)
-    with progressbar.ProgressBar(max_value=length) as bar:
-        for i in range(length):
-            text = ' '.join(tts[i].sents)
-            sequences += construct_sequences(text, context_win)
-            bar.update(i)
+
+    for tt in tqdm(tts):
+        text = ' '.join(tt.sents)
+        sequences += construct_sequences(text, context_win)
 
     return sequences
         
