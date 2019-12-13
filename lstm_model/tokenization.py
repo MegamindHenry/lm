@@ -1,6 +1,7 @@
 import argparse
 from keras.preprocessing.text import Tokenizer
 from pickle import dump
+import numpy as np
 
 
 def load_seq(file):
@@ -25,11 +26,16 @@ if __name__ == '__main__':
     lines = load_seq(file)
 
     print('Prepare tokenizer...')
-    tokenizer = Tokenizer(word_num, filters='')
+    tokenizer = Tokenizer(None, filters='')
     tokenizer.fit_on_texts(lines)
+
+    vocab_size = len(tokenizer.word_index) + 1
+    print('vocab_size: {}'.format(vocab_size))
 
     print('Transform to sequences...')
     sequences = tokenizer.texts_to_sequences(lines)
+    sequences = np.array(sequences)
+    print('sequences shape: {}'.format(sequences.shape))
 
     dump(tokenizer, open(tokenizer_path + 'tokenizer.pkl', 'wb'))
-    dump(sequences, open(tokenizer_path + 'sequences.pkl', 'wb'))
+    np.save(tokenizer_path + 'sequences', sequences)

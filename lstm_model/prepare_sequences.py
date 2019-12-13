@@ -19,13 +19,18 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='prepare context words for tasa corpus')
     parser.add_argument('-cw', action="store", dest="context_win", type=int, default=5, help='set context windows')
     parser.add_argument('-sp', action="store", dest="save_path", type=str, default='../trained/', help='set save path')
+    parser.add_argument('-sn', action="store", dest="seq_name", type=str, default='sequences', help='seq file name')
+    parser.add_argument('-c', action="store", dest="corpus", type=str, default='tasaDocs.txt', help='set save path')
+
 
     args = parser.parse_args()
-    context_win = args.context_win
-    file_name = 'sequences_{}.txt'.format(context_win)
+    context_win = args.context_win 
+    seq_name = args.seq_name
+    file_name = '{}_{}.txt'.format(seq_name, context_win)
     save_path = args.save_path + file_name
+    corpus = '../data/{}'.format(args.corpus)
 
-    tts = read_tasa('../data/tasaDocs.txt')
+    tts = read_tasa(corpus)
     sequences = prepare_sequences_tasatext(tts, context_win)
     save_seq(save_path, sequences)
 
