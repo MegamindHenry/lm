@@ -1,2 +1,4 @@
 nltk==3.4.5
-progressbar2==3.42.0
+numpy==1.16.4
+keras==2.2.4
+tqdm==4.32.2
