@@ -133,3 +133,4 @@ data/*
 */play.py
 *.txt
 *.pkl
+*.npy
