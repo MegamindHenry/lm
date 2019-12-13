@@ -28,4 +28,8 @@ if __name__ == '__main__':
     tokenizer = Tokenizer(word_num, filters='')
     tokenizer.fit_on_texts(lines)
 
+    print('Transform to sequences...')
+    sequences = tokenizer.texts_to_sequences(lines)
+
     dump(tokenizer, open(tokenizer_path + 'tokenizer.pkl', 'wb'))
+    dump(sequences, open(tokenizer_path + 'sequences.pkl', 'wb'))
