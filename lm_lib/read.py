@@ -23,20 +23,20 @@ def read_tasa(file):
         return tts
 
 
-def prepare_sequences_tasatext(tts):
+def prepare_sequences_tasatext(tts, context_win=5):
     sequences = []
     length = len(tts)
     with progressbar.ProgressBar(max_value=length) as bar:
         for i in range(length):
             text = ' '.join(tts[i].sents)
-            sequences += construct_sequences(text)
+            sequences += construct_sequences(text, context_win)
             bar.update(i)
 
     return sequences
         
 
 
-def construct_sequences(text, context_win=5):
+def construct_sequences(text, context_win):
     tokens = word_tokenize(text)
 
     length = context_win + 1
