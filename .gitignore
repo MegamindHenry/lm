@@ -134,3 +134,4 @@ data/*
 *.txt
 *.pkl
 *.npy
+lstm_model/test1.py
