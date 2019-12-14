@@ -32,7 +32,9 @@ def model(cell, vocab_size, embed_dim, input_length):
 def data_generator(X, y, steps, vocab_size):
     while True:
         for i in range(steps):
-            yield (X[i], to_categorical(y[i], num_classes=vocab_size))
+            X_out = np.array([X[i]])
+            y_out = np.array([to_categorical(y[i], num_classes=vocab_size)])
+            yield X_out, y_out
 
 
 if __name__ == '__main__':
@@ -62,7 +64,9 @@ if __name__ == '__main__':
 
     X, y = sequences[:, :-1], sequences[:, -1]
     steps = len(X)
-
     seq_length = X.shape[1]
 
     model = model(lstm_cells, vocab_size, embed_dim, seq_length)
+
+    model.fit_generator(data_generator(X, y, steps, vocab_size),
+        samples_per_epoch=steps, nb_epoch=10)
