@@ -45,3 +45,10 @@ def construct_sequences(text, context_win):
         # store
         sequences.append(line)
     return sequences
+
+
+def load_seq(file):
+    fp = open(file, 'r', encoding='utf8')
+    text = fp.read()
+    sequences = text.split('\n')
+    return sequences
