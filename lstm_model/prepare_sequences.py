@@ -1,10 +1,9 @@
 import sys, os
-from nltk.tokenize import word_tokenize
-import argparse
-
 path = os.path.dirname(sys.path[0])
 sys.path.insert(0, path)
 
+from nltk.tokenize import word_tokenize
+import argparse
 from lm_lib.read import read_tasa, prepare_sequences_tasatext
 
 

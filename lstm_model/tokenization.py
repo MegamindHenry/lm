@@ -1,14 +1,12 @@
+import sys, os
+path = os.path.dirname(sys.path[0])
+sys.path.insert(0, path)
+
 import argparse
 from keras.preprocessing.text import Tokenizer
 from pickle import dump
 import numpy as np
-
-
-def load_seq(file):
-    fp = open(file, 'r', encoding='utf8')
-    text = fp.read()
-    sequences = text.split('\n')
-    return sequences
+from lm_lib.read import load_seq
 
 
 if __name__ == '__main__':
@@ -26,7 +24,7 @@ if __name__ == '__main__':
     lines = load_seq(file)
 
     print('Preparing tokenizer...')
-    tokenizer = Tokenizer(None, filters='')
+    tokenizer = Tokenizer(word_num, filters='', oov_token='UNK')
     tokenizer.fit_on_texts(lines)
 
     vocab_size = len(tokenizer.word_index) + 1
@@ -39,4 +37,4 @@ if __name__ == '__main__':
 
     print('Saving files...')
     dump(tokenizer, open(tokenizer_path + 'tokenizer.pkl', 'wb'))
-    # dump(sequences, open(tokenizer_path + 'sequences.pkl', 'wb'))
+    dump(sequences, open(tokenizer_path + 'sequences.pkl', 'wb'))
