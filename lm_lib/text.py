@@ -27,22 +27,14 @@ class TasaText(object):
         output += '\n===============\n'
         return output
 
-    def demo_prob_table(self):
-        prob_1 = {"adsf":0.1, "adsfs":0.2, "kdkdk":0.7}
-
-        a = TasaTextProb(1, "asdfa", ["a", "b", "c", "d"], prob_1)
-        self.prob_table.append(a)
-        b = TasaTextProb(2, "asddddfa", ["a", "b", "c", "d"], prob_1)
-        self.prob_table.append(b)
-
 
 class TasaTextProb(object):
     # __slots__ = ['position', 'gold', 'contexts', 'prob']
 
-    def __init__(self, position, gold, contexts, prob):
+    def __init__(self, position, prob):
         self.position = position
-        self.gold = gold
-        self.contexts = contexts
+        # self.gold = gold
+        # self.contexts = contexts
         self.prob = prob
 
 
