@@ -136,3 +136,4 @@ data/*
 *.npy
 lstm_model/test1.py
 *.h5
+*.json

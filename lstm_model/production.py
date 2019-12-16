@@ -95,5 +95,6 @@ if __name__ == '__main__':
 
     output = json.dumps(tts, cls=TasaTextEncoder, indent=4)
 
-    print(output)
+    with open('../trained/output.json', 'w+', encoding='utf8') as fp:
+        fp.write(output)
     
