@@ -3,7 +3,7 @@ from pickle import load
 from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Embedding
-from keras.callbacks.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping
 import numpy as np
 from math import ceil
 
