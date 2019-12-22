@@ -21,32 +21,6 @@ def read_tasa(file):
         return tts
 
 
-def prepare_sequences_tasatext(tts, context_win=5):
-    sequences = []
-
-    for tt in tqdm(tts):
-        text = ' '.join(tt.sents)
-        sequences += construct_sequences(text, context_win)
-
-    return sequences
-        
-
-
-def construct_sequences(text, context_win):
-    tokens = word_tokenize(text)
-
-    length = context_win + 1
-    sequences = list()
-    for i in range(length, len(tokens)):
-        # select sequence of tokens
-        seq = tokens[i - length:i]
-        # convert into a line
-        line = ' '.join(seq)
-        # store
-        sequences.append(line)
-    return sequences
-
-
 def load_seq(file):
     fp = open(file, 'r', encoding='utf8')
     text = fp.read()

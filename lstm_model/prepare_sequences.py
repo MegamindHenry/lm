@@ -2,16 +2,17 @@ import sys, os
 path = os.path.dirname(sys.path[0])
 sys.path.insert(0, path)
 
-from nltk.tokenize import word_tokenize
 import argparse
-from lm_lib.read import read_tasa, prepare_sequences_tasatext
+from lm_lib.text import TasaText
+from lm_lib.read import read_tasa
+from tqdm import tqdm
 
 
-def save_seq(path, sequences):
+def save_seq(path, tts_sequences):
+    text = '\n'.join(sequence for tt_sequences in tts_sequences for sequence in tt_sequences)
     
-    text = '\n'.join(sequences)
     with open(path, 'w+', encoding='utf8') as fp:
-    	fp.write(text)
+        fp.write(text)
 
 
 if __name__ == '__main__':
@@ -30,8 +31,9 @@ if __name__ == '__main__':
     corpus = '../data/{}'.format(args.corpus)
 
     tts = read_tasa(corpus)
-    sequences = prepare_sequences_tasatext(tts, context_win)
-    save_seq(save_path, sequences)
+    # sequences = prepare_sequences_tasatext(tts, context_win)
+    tts_sequences = [tt.to_sequences() for tt in tqdm(tts)]
+    save_seq(save_path, tts_sequences)
 
 
     
