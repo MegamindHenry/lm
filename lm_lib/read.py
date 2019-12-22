@@ -13,7 +13,7 @@ def read_tasa(file):
         corpus = fp.read()
         
         tts = []
-        for text in corpus.split('\n\n'):
+        for text in tqdm(corpus.split('\n\n')):
             tt = TasaText.from_text(text)
             if tt:
                 tts.append(tt)
