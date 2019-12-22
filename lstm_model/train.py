@@ -59,7 +59,6 @@ if __name__ == '__main__':
     parser.add_argument('-bs', action="store", dest="batch_size", type=int,
         default=256, help='batch_size')
 
-
     args = parser.parse_args()
 
     tokenizer_path = args.tokenizer_path
