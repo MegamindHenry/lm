@@ -3,6 +3,7 @@ from pickle import load
 from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Dense, LSTM, Embedding
+from keras.callbacks.callbacks import EarlyStopping
 import numpy as np
 from math import ceil
 
@@ -76,12 +77,26 @@ if __name__ == '__main__':
     vocab_size = min((tokenizer.num_words, len(tokenizer.word_index) + 1))
 
     X, y = sequences[:, :-1], sequences[:, -1]
-    input_length = len(X)
+    total_samples = len(X)
     seq_length = X.shape[1]
-    samples_per_epoch = ceil(input_length/batch_size)
+
+    train_dev_split = total_samples//2
+    train_samples = train_dev_split
+    dev_samples = total_samples - train_samples
+
+    samples_per_epoch = ceil(train_samples/batch_size)
+    validation_steps = ceil(dev_samples/batch_size)
+
+    X_train, X_dev = X[:train_dev_split], X[train_dev_split:]
+    y_train, y_dev = y[:train_dev_split], y[train_dev_split:]
 
     model = model(lstm_cells, vocab_size, embed_dim, seq_length)
 
-    model.fit_generator(data_generator(X, y, input_length, batch_size, vocab_size), samples_per_epoch=samples_per_epoch, nb_epoch=2)
+    train_generator = data_generator(X_train, y_train, train_samples, batch_size, vocab_size)
+    dev_generator = data_generator(X_dev, y_dev, dev_samples, batch_size, vocab_size)
+
+    es = EarlyStopping(patience=20, restore_best_weights=True)
+
+    model.fit_generator(generator=train_generator, validation_data=dev_generator, samples_per_epoch=samples_per_epoch, validation_steps=validation_steps, nb_epoch=100, callbacks=[es])
 
     model.save('../trained/demo_model.h5')
