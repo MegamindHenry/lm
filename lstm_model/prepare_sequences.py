@@ -35,5 +35,3 @@ if __name__ == '__main__':
     tts_sequences = [tt.to_sequences() for tt in tqdm(tts)]
     save_seq(save_path, tts_sequences)
 
-
-    
