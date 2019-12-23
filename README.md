@@ -26,10 +26,10 @@ This is a lm project for hiwi.
 ```
 
 ## Instructions
-1. install all dependencies
+1. install all dependencies `pip3 install -r requirements.txt`
 2. create data folder and transfer data (by default tasaTrain.txt is needed)
 3. run `python3 prepare_sequences.py`
 4. run `python3 tokenization.py`
 5. run `python3 train.py`
-6. run 'production.py' (by default tasaTest.txt is needed in data folder)
+6. run `production.py` (by default tasaTest.txt is needed in data folder)
 7. outputs are in outputs folder
