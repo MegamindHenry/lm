@@ -1,13 +1,18 @@
+"""helper methods for read tasa files and sequences
+"""
 from lm_lib.text import TasaText
 from nltk.tokenize import word_tokenize
 from tqdm import tqdm
 
 
 def read_tasa(file):
-    """Read tasa txt file and return
-
-    :param file: (str) tasa file path
-    :return: (list)(TasaText) Returning a list of TasaText
+    """helper methods for read tasa file
+    
+    Args:
+        file (str): file path of a tasa corpus
+    
+    Returns:
+        list<-tasaText: list of tasaText objects
     """
     with open(file, 'r', encoding='utf8') as fp:
         corpus = fp.read()
@@ -22,6 +27,14 @@ def read_tasa(file):
 
 
 def load_seq(file):
+    """read sequences for a file
+    
+    Args:
+        file (str): file path
+    
+    Returns:
+        list<-str: list of sequences
+    """
     fp = open(file, 'r', encoding='utf8')
     text = fp.read()
     sequences = text.split('\n')

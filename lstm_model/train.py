@@ -1,3 +1,9 @@
+"""train keras model
+"""
+import sys, os
+path = os.path.dirname(sys.path[0])
+sys.path.insert(0, path)
+
 import argparse
 from pickle import load
 from keras.utils import to_categorical
@@ -6,16 +12,21 @@ from keras.layers import Dense, LSTM, Embedding
 from keras.callbacks import EarlyStopping
 import numpy as np
 from math import ceil
-
-
-def load_seq(file):
-    fp = open(file, 'r', encoding='utf8')
-    text = fp.read()
-    sequences = text.split('\n')
-    return sequences
+from lm_lib.read import load_seq
 
 
 def model(cell, vocab_size, embed_dim, input_length):
+    """create model
+    
+    Args:
+        cell (int): lstm unit
+        vocab_size (int): vocab size
+        embed_dim (int): embed dim
+        input_length (int): input length
+    
+    Returns:
+        keras.model: model
+    """
     model = Sequential()
     model.add(Embedding(vocab_size, embed_dim, input_length=input_length))
     model.add(LSTM(cell, return_sequences=True))
@@ -32,12 +43,19 @@ def model(cell, vocab_size, embed_dim, input_length):
 
 
 def data_generator(X, y, input_length, batch_size, vocab_size):
+    """data generator for 
+    
+    Args:
+        X (nparray): X
+        y (nparray): y
+        input_length (int): input length
+        batch_size (int): batch size
+        vocab_size (int): batch size
+    
+    Yields:
+        X, y: X, y
+    """
     while True:
-        # for i in range(steps):
-        #     X_out = np.array([X[i]])
-        #     y_out = np.array([to_categorical(y[i], num_classes=vocab_size)])
-        #     yield X_out, y_out
-
         iter = 0
         while iter < input_length:
             end = iter+batch_size

@@ -1,3 +1,5 @@
+"""Prepare sequences for tokenizer and training
+"""
 import sys, os
 path = os.path.dirname(sys.path[0])
 sys.path.insert(0, path)
@@ -9,6 +11,12 @@ from tqdm import tqdm
 
 
 def save_seq(path, tts_sequences):
+    """save sequences in a file
+    
+    Args:
+        path (str): save path
+        tts_sequences (list): list of list of sequences
+    """
     text = '\n'.join(sequence for tt_sequences in tts_sequences for sequence in tt_sequences)
     
     with open(path, 'w+', encoding='utf8') as fp:
@@ -31,7 +39,6 @@ if __name__ == '__main__':
     corpus = '../data/{}'.format(args.corpus)
 
     tts = read_tasa(corpus)
-    # sequences = prepare_sequences_tasatext(tts, context_win)
     tts_sequences = [tt.to_sequences() for tt in tqdm(tts)]
     save_seq(save_path, tts_sequences)
 
