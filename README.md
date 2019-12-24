@@ -31,5 +31,6 @@ This is a lm project for hiwi.
 3. run `python3 prepare_sequences.py`
 4. run `python3 tokenization.py`
 5. run `python3 train.py`
-6. run `python3 production.py` (by default tasaTest.txt is needed in data folder)
-7. outputs are in outputs folder
+6. create output folder
+7. run `python3 production.py` (by default tasaTest.txt is needed in data folder)
+8. outputs are in outputs folder
