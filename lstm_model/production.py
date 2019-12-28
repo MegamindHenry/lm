@@ -40,6 +40,6 @@ if __name__ == '__main__':
         tt.construct_prob_table(model, context_win, tokenizer, top_num)
 
         output = json.dumps(tt, cls=TasaTextEncoder, indent=4)
-        output_path = '../output/{}.json'.format(tt.name)
+        output_path = '../lstm_output/{}.json'.format(tt.name)
         with open(output_path, 'w+', encoding='utf8') as fp:
             fp.write(output)
