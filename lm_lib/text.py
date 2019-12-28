@@ -79,6 +79,10 @@ class TasaText(object):
         output += '\n===============\n'
         return output
 
+    def to_sents(self):
+        text = list(self.segments)
+        return text
+
     def to_sequences(self, context_win=5, open_closed_tag=True):
         """from TasaText make sequences for text
         
