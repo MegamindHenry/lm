@@ -12,7 +12,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='train with nltk')
     parser.add_argument('-sp', action="store", dest="sents_path", type=str, default='../trained/sents.pkl', help='set save path')
     parser.add_argument('-mp', action="store", dest="model_path", type=str, default='../trained/nltk_model.pkl', help='set save model path')
-    parser.add_argument('-mn', action="store", dest="model_name", type=str, default='KneserNeyInterpolated', help='set n-gram model')
+    parser.add_argument('-mn', action="store", dest="model_name", type=str, default='WittenBellInterpolated', help='set n-gram model')
     parser.add_argument('-n', action="store", dest="ngram", type=int, default=6, help='set n-gram number')
 
 
@@ -34,13 +34,12 @@ if __name__ == '__main__':
     elif model_name == 'MLE':
         model = MLE(ngram)
     else:
-        model = KneserNeyInterpolated(ngram)
+        model = WittenBellInterpolated(ngram)
 
     print('Training...')
     model.fit(train_data, padded_sents)
-    print('Done')
+    print('Training done')
 
     print('Saving files...')
     dump(model, open(model_path, 'wb'))
-
-    print(model.logscore("tool", "language is never a good".split()))
+    print('Saving done')
