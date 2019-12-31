@@ -4,6 +4,7 @@ from json import JSONEncoder
 from nltk.tokenize import word_tokenize
 import json
 import numpy as np
+from tqdm import tqdm
 
 class TasaText(object):
 
@@ -17,7 +18,7 @@ class TasaText(object):
         sents (list): list of sentences in text
     """
     
-    def __init__(self, name, description, sents, segments, prob_table=None):
+    def __init__(self, name, description, sents, segments, length, prob_table=None):
         """constructor for TasaText
         
         Args:
@@ -31,6 +32,7 @@ class TasaText(object):
         self.description = description
         self.sents = sents
         self.segments = segments
+        self.length = length
         if prob_table == None:
             self.prob_table = []
         else:
@@ -51,7 +53,8 @@ class TasaText(object):
         if lines[0]:
             name = lines[0].split()[0]
             segments = word_tokenize(' '.join(lines[1:]))
-            return cls(name, lines[0], lines[1:], segments, None)
+            length = len(segments)
+            return cls(name, lines[0], lines[1:], segments, length, None)
         return None
 
     @classmethod
@@ -64,7 +67,7 @@ class TasaText(object):
         Returns:
             TasaText: tt
         """
-        return cls(tt.name, tt.description, tt.sents, tt.segments, tt.prob_table)
+        return cls(tt.name, tt.description, tt.sents, tt.segments, tt.lenght, tt.prob_table)
 
     def __str__(self):
         """to_string method
@@ -135,6 +138,41 @@ class TasaText(object):
         sequences.append(line)
 
         return sequences
+
+    def construct_prob_table_nltk(self, model, all_candidates, context_win):
+        prob_table_edited = {}
+
+        for i in tqdm(range(self.length)):
+            token = {}
+            target = self.segments[i]
+            candidates = all_candidates[i]
+            contexts = self.construct_context_nltk(i, context_win)
+            prob = self.construct_prob_nltk(model, candidates, contexts)
+
+            token['contexts'] = contexts
+            token['target'] = target
+            token['prob_table'] = prob
+
+            prob_table_edited[i] = token
+
+        self.prob_table = prob_table_edited
+
+    def construct_context_nltk(self, position, context_win):
+        if position == 0:
+            return []
+
+        if context_win <= position:
+            return self.segments[position-context_win:position]
+
+        return self.segments[:position]
+
+    def construct_prob_nltk(self, model, candidates, contexts):
+        prob_table = {}
+        
+        for c in candidates:
+            prob_table[c] = model.logscore(c, contexts)
+
+        return prob_table
 
     def construct_prob_table(self, model, context_win, tokenizer, top_num):
         """make prob table for each position

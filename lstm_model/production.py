@@ -15,7 +15,7 @@ import json
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='produce prob')
     parser.add_argument('-cw', action="store", dest="context_win", type=int, default=5, help='set context windows')
-    parser.add_argument('-t', action="store", dest="target", type=str, default='../data/tasaTest.txt', help='set target path')
+    parser.add_argument('-t', action="store", dest="target", type=str, default='tasaTest.txt', help='set target path')
     parser.add_argument('-mp', action="store", dest="model_path", type=str, default='../trained/demo_model.h5', help='set trained model path')
     parser.add_argument('-tp', action="store", dest="tokenizer_path", type=str, default='../trained/tokenizer.pkl', help='tokenizer save path')
     parser.add_argument('-tn', action="store", dest="top_num", type=int, default=100, help='top number of candidate to keep')
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     context_win = args.context_win
-    target = args.target
+    target = '../data/{}'.format(args.target)
     model_path = args.model_path
     tokenizer_path = args.tokenizer_path
     top_num = args.top_num
