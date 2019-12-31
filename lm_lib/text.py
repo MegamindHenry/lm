@@ -12,6 +12,7 @@ class TasaText(object):
     
     Attributes:
         description (str): description of tasa text
+        length (TYPE): Description
         name (str): name of the text
         prob_table (list): list of prob table for each position
         segments (list): list of segments in text
@@ -26,6 +27,7 @@ class TasaText(object):
             description (str): description
             sents (list): sents
             segments (list): segments
+            length (TYPE): Description
             prob_table (None, optional): list
         """
         self.name = name
@@ -83,6 +85,11 @@ class TasaText(object):
         return output
 
     def to_sents(self):
+        """return all sents
+        
+        Returns:
+            list: list of sents
+        """
         text = list(self.segments)
         return text
 
@@ -140,6 +147,13 @@ class TasaText(object):
         return sequences
 
     def construct_prob_table_nltk(self, model, all_candidates, context_win):
+        """construct prob table for nltk model
+        
+        Args:
+            model (nltk ngram model): mdoel
+            all_candidates (list of list of candidates): all candidates
+            context_win (int): context window
+        """
         prob_table_edited = {}
 
         for i in tqdm(range(self.length)):
@@ -158,6 +172,15 @@ class TasaText(object):
         self.prob_table = prob_table_edited
 
     def construct_context_nltk(self, position, context_win):
+        """construct its context
+        
+        Args:
+            position (int): position of the text
+            context_win (int): context window
+        
+        Returns:
+            TYPE: Description
+        """
         if position == 0:
             return []
 
@@ -167,6 +190,16 @@ class TasaText(object):
         return self.segments[:position]
 
     def construct_prob_nltk(self, model, candidates, contexts):
+        """given a model, candidates, contexts, construct its prob
+        
+        Args:
+            model (nltk ngram model): nltk ngram model
+            candidates (list of candidates): candidates to test out
+            contexts (list of contexts): contexts to test out
+        
+        Returns:
+            TYPE: Description
+        """
         prob_table = {}
         
         for c in candidates:

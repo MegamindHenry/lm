@@ -23,15 +23,12 @@ if __name__ == '__main__':
     print('Load trained model...')
     model = load(open(model_path, 'rb'))
 
-    # print(model.logscore("tool", "language is never a good".split()))
-    # print(model.logscore("tool", []))
-
-    # print([1, 2, 3, 4][1:3])
-
     tts = read_tasa(target)
 
     for tt in tts:
         print('tasaText: {}\n'.format(tt.name))
+
+        # hard code for all candidates
         all_candidates = [["language", "tool", "the", "."] for _ in range(tt.length)]
 
         tt.construct_prob_table_nltk(model, all_candidates, context_win)
