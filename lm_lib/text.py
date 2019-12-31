@@ -139,7 +139,7 @@ class TasaText(object):
             sequences.append(line)
 
         # append closed tags 
-        closed_tag = "<e>"
+        closed_tag = "</s>"
         seq = tokens[-length+1:] + [closed_tag]
         line = ' '.join(seq)
         sequences.append(line)
@@ -181,13 +181,15 @@ class TasaText(object):
         Returns:
             TYPE: Description
         """
+        s = ['<s>']
+
         if position == 0:
-            return []
+            return s
 
         if context_win <= position:
             return self.segments[position-context_win:position]
 
-        return self.segments[:position]
+        return s + self.segments[:position]
 
     def construct_prob_nltk(self, model, candidates, contexts):
         """given a model, candidates, contexts, construct its prob
@@ -203,7 +205,11 @@ class TasaText(object):
         prob_table = {}
         
         for c in candidates:
-            prob_table[c] = model.logscore(c, contexts)
+            try:
+                score = model.logscore(c, contexts)
+            except ZeroDivisionError:
+                score = float("-inf")
+            prob_table[c] = score
 
         return prob_table
 
