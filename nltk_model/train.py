@@ -13,7 +13,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='train with nltk')
     parser.add_argument('-sp', action="store", dest="sents_path", type=str, default='../trained/sents.pkl', help='set save path')
     parser.add_argument('-mp', action="store", dest="model_path", type=str, default='../trained/nltk_model.pkl', help='set save model path')
-    parser.add_argument('-mn', action="store", dest="model_name", type=str, default='KneserNeyInterpolated', help='set n-gram model')
+    parser.add_argument('-mn', action="store", dest="model_name", type=str, default='WittenBellInterpolated', help='set n-gram model')
     parser.add_argument('-cw', action="store", dest="context_win", type=int, default=5, help='set n-gram number')
     parser.add_argument('-co', action="store", dest="cutoff", type=int, default=8, help='set unknown words cutoff')
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     elif model_name == 'MLE':
         model = MLE(ngram)
     else:
-        model = KneserNeyInterpolated(ngram)
+        model = WittenBellInterpolated(ngram)
 
     print('Training...')
     model.fit(train_data, vocab)
