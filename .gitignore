@@ -137,3 +137,4 @@ data/*.txt
 lstm_model/test1.py
 *.h5
 *.json
+*.csv
