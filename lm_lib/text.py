@@ -19,7 +19,7 @@ class TasaText(object):
         sents (list): list of sentences in text
     """
     
-    def __init__(self, name, description, sents, segments, length, prob_table=None):
+    def __init__(self, name, description, sents, segments, length, prob_table_list=None):
         """constructor for TasaText
         
         Args:
@@ -35,10 +35,10 @@ class TasaText(object):
         self.sents = sents
         self.segments = segments
         self.length = length
-        if prob_table == None:
-            self.prob_table = []
+        if prob_table_list == None:
+            self.prob_table_list = []
         else:
-            self.prob_table = prob_table
+            self.prob_table_list = prob_table_list
 
     @classmethod
     def from_text(cls, text):
@@ -56,6 +56,7 @@ class TasaText(object):
             name = lines[0].split()[0]
             segments = word_tokenize(' '.join(lines[1:]))
             length = len(segments)
+
             return cls(name, lines[0], lines[1:], segments, length, None)
         return None
 
@@ -69,7 +70,7 @@ class TasaText(object):
         Returns:
             TasaText: tt
         """
-        return cls(tt.name, tt.description, tt.sents, tt.segments, tt.lenght, tt.prob_table)
+        return cls(tt.name, tt.description, tt.sents, tt.segments, tt.lenght, tt.prob_table_list)
 
     def __str__(self):
         """to_string method
@@ -154,7 +155,7 @@ class TasaText(object):
             all_candidates (list of list of candidates): all candidates
             context_win (int): context window
         """
-        prob_table_edited = {}
+        prob_table_edited = []
 
         for i in tqdm(range(self.length)):
             token = {}
@@ -167,9 +168,9 @@ class TasaText(object):
             token['target'] = target
             token['prob_table'] = prob
 
-            prob_table_edited[i] = token
+            prob_table_edited.append(token)
 
-        self.prob_table = prob_table_edited
+        self.prob_table_list = prob_table_edited
 
     def construct_context_nltk(self, position, context_win):
         """construct its context
@@ -202,14 +203,15 @@ class TasaText(object):
         Returns:
             TYPE: Description
         """
-        prob_table = {}
+        prob_table = []
         
         for c in candidates:
             try:
                 score = model.logscore(c, contexts)
             except ZeroDivisionError:
                 score = float("-inf")
-            prob_table[c] = score
+            prob = {"candidate": c, "probability": score}
+            prob_table.append(prob)
 
         return prob_table
 
@@ -231,7 +233,7 @@ class TasaText(object):
 
         prob_table = self.construct_prob(predicts_raw, tokenizer, top_num)
 
-        prob_table_edited = {}
+        prob_table_edited = []
         for i, prob in enumerate(prob_table):
             token = {}
             seq = lines[i].split()
@@ -240,9 +242,9 @@ class TasaText(object):
             token['contexts'] = contexts
             token['target'] = target
             token['prob_table'] = prob
-            prob_table_edited[i] = token
+            prob_table_edited.append(token)
 
-        self.prob_table = prob_table_edited
+        self.prob_table_list = prob_table_edited
 
     def construct_prob(self, predicts_raw, tokenizer, top_num):
         """make the prob table
@@ -257,17 +259,25 @@ class TasaText(object):
         """
         prob_table_list = []
         for predict in predicts_raw:
-            prob_table = dict()
+            prob_table = []
 
             top_index = np.argsort(predict)[::-1]
             for i in range(top_num):
                 index = top_index[i]
                 if index == 0:
-                    prob_table['<NULL>'] = str(predict[index])
+                    prob = {
+                        "candidate": "<NULL>",
+                        "probability": str(predict[index])
+                    }
+                    prob_table.append(prob)
                     continue
 
                 word = tokenizer.index_word[index]
-                prob_table[word] = str(predict[index])
+                prob = {
+                    "candidate": word,
+                    "probability": str(predict[index])
+                }
+                prob_table.append(prob)
 
             prob_table_list.append(prob_table)
 
