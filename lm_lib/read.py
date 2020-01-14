@@ -5,7 +5,7 @@ from nltk.tokenize import word_tokenize
 from tqdm import tqdm
 
 
-def read_tasa(file):
+def read_tasa(file, remove_punc=True):
     """helper methods for read tasa file
     
     Args:
@@ -19,7 +19,7 @@ def read_tasa(file):
         
         tts = []
         for text in tqdm(corpus.split('\n\n')):
-            tt = TasaText.from_text(text)
+            tt = TasaText.from_text(text, remove_punc)
             if tt:
                 tts.append(tt)
 

@@ -1,7 +1,7 @@
 """tasa object class file
 """
 from json import JSONEncoder
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import RegexpTokenizer, word_tokenize
 import json
 import numpy as np
 from tqdm import tqdm
@@ -41,7 +41,7 @@ class TasaText(object):
             self.prob_table_list = prob_table_list
 
     @classmethod
-    def from_text(cls, text):
+    def from_text(cls, text, remove_punc=True):
         """construct for a text
         
         Args:
@@ -50,11 +50,16 @@ class TasaText(object):
         Returns:
             TasaObject: the TasaText object
         """
+
         lines = text.replace('\n', '').split('[S]')
 
         if lines[0]:
             name = lines[0].split()[0]
-            segments = word_tokenize(' '.join(lines[1:]))
+            if remove_punc:
+                tokenizer = RegexpTokenizer(r'\w+')
+                segments = tokenizer.tokenize(' '.join(lines[1:]))
+            else:
+                segments = word_tokenize(' '.join(lines[1:]))
             length = len(segments)
 
             return cls(name, lines[0], lines[1:], segments, length, None)
