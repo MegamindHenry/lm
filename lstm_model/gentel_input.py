@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('-sp', action="store", dest="save_path", type=str, default='../trained/', help='set save path')
 
     args = parser.parse_args()
-    data_path = args.data_path + '*.gentelinput'
+    data_path = args.data_path + '*.gentleinput'
     save_path = args.save_path + 'gentelinput_list.txt'
 
     files = []
