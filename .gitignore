@@ -139,3 +139,5 @@ lstm_model/test1.py
 *.json
 *.csv
 *.bin
+
+test_data/*
