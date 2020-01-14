@@ -12,7 +12,7 @@ def save(path, files):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='find all gentelinput file')
-    parser.add_argument('-dp', action="store", dest="data_path", type=str, default='/mnt/shared/projects/RedHen/well_aligned', help='set context windows')
+    parser.add_argument('-dp', action="store", dest="data_path", type=str, default='/mnt/shared/projects/RedHen/well_aligned/', help='set context windows')
     parser.add_argument('-sp', action="store", dest="save_path", type=str, default='../trained/', help='set save path')
 
     args = parser.parse_args()
