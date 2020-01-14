@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     data_path = args.data_path + '*.gentleinput'
-    save_path = args.save_path + 'gentelinput_list.txt'
+    save_path = args.save_path + 'gentleinput_list.txt'
 
     files = []
 
