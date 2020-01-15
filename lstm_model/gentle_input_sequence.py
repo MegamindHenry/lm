@@ -1,3 +1,5 @@
+from tqdm import tqdm
+
 def read_gentle(file):
     fp = open(file, 'r', encoding='utf8')
     segments = fp.read().split('\n')
@@ -50,7 +52,7 @@ if __name__ == '__main__':
         gentle_inputs = fp.read().split('\n')
 
     sequence_list = []
-    for file in gentle_inputs:
+    for file in tqdm(gentle_inputs):
         file_path = data_path + file + '.gentleinput'
         segments = read_gentle(file_path)
         sequences = to_sequences(segments, context_win)
