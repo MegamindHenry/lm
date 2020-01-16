@@ -1,9 +1,15 @@
 from tqdm import tqdm
+import string
 
-def read_gentle(file):
+def read_gentle(file, remove_punc=True):
     fp = open(file, 'r', encoding='utf8')
     segments = fp.read().split('\n')
     fp.close()
+
+    if remove_punc:
+        return [segment for segment in segments
+            if segment not in string.punctuation]
+
     return segments
 
 def to_sequences(segments, context_win):
@@ -43,8 +49,8 @@ def save_sequences(file_path, sequence_list):
 
 if __name__ == '__main__':
     gentle_inputs_path = '../trained/gentleinput_list.txt'
-    # data_path = '../test_data/'
-    data_path = '/mnt/shared/projects/RedHen/well_aligned/'
+    data_path = '../test_data/'
+    # data_path = '/mnt/shared/projects/RedHen/well_aligned/'
     save_path = '../trained/gentleinput_seq.txt'
     context_win = 5
 
@@ -54,7 +60,7 @@ if __name__ == '__main__':
     sequence_list = []
     for file in tqdm(gentle_inputs):
         file_path = data_path + file + '.gentleinput'
-        segments = read_gentle(file_path)
+        segments = read_gentle(file_path, True)
         sequences = to_sequences(segments, context_win)
         sequence_list.append(sequences)
 
