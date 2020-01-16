@@ -49,8 +49,8 @@ def save_sequences(file_path, sequence_list):
 
 if __name__ == '__main__':
     gentle_inputs_path = '../trained/gentleinput_list.txt'
-    data_path = '../test_data/'
-    # data_path = '/mnt/shared/projects/RedHen/well_aligned/'
+    # data_path = '../test_data/'
+    data_path = '/mnt/shared/projects/RedHen/well_aligned/'
     save_path = '../trained/gentleinput_seq.txt'
     context_win = 5
 
