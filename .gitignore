@@ -141,3 +141,4 @@ lstm_model/test1.py
 *.bin
 
 test_data/*
+*.tar.gz
