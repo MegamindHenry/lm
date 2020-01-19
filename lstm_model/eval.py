@@ -3,22 +3,22 @@ path = os.path.dirname(sys.path[0])
 sys.path.insert(0, path)
 
 from lm_lib.read import load_seq, read_gentleinput_list
+from lm_lib.math import argmax_top_k
 from pickle import load
 import numpy as np
 from keras.models import load_model
 from tqdm import tqdm
 
 
-def eval(model, X, gold, gi):
+def eval(model, X, gold, gi, k):
     total = 0
     correct = 0
 
     predict_raw = model.predict(X)
-
-    predicts = np.argmax(predict_raw, axis=-1)
+    predicts = argmax_top_k(predict_raw, k)
 
     for i in range(len(X)):
-        if predicts[i] == gold[i]:
+        if gold[i] in predicts[i]:
             correct += 1
         total += 1
         
@@ -31,6 +31,7 @@ if __name__ == '__main__':
     tokenizer_path = '../trained/tokenizer.pkl'
     model_path = '../trained/demo_model.h5'
     gentle_inputs_path = '../trained/gentleinput_list.txt'
+    k = 10
 
     print('Read gentleinput list ...')
     gentle_inputs = read_gentleinput_list(gentle_inputs_path)
@@ -49,6 +50,6 @@ if __name__ == '__main__':
 
         X, y = sequences[:, :-1], sequences[:, -1]
 
-        results.append(eval(model, X, y, gi))
+        results.append(eval(model, X, y, gi, k))
 
     print(results)
