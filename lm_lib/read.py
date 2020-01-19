@@ -5,6 +5,11 @@ from nltk.tokenize import word_tokenize
 from tqdm import tqdm
 
 
+def read_gentleinput_list(file):
+    with open(file, 'r', encoding='utf8') as fp:
+        return fp.read().split('\n')
+
+
 def read_tasa(file, remove_punc=True):
     """helper methods for read tasa file
     

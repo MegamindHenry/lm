@@ -1,5 +1,10 @@
+import sys, os
+path = os.path.dirname(sys.path[0])
+sys.path.insert(0, path)
+
 from tqdm import tqdm
 import string
+from lm_lib.read import read_gentleinput_list
 
 def read_gentle(file, remove_punc=True):
     fp = open(file, 'r', encoding='utf8')
@@ -51,11 +56,12 @@ if __name__ == '__main__':
     gentle_inputs_path = '../trained/gentleinput_list.txt'
     # data_path = '../test_data/'
     data_path = '/mnt/shared/projects/RedHen/well_aligned/'
-    save_path = '../trained/gentleinput_seq.txt'
+    save_path = '../trained/gentleinput_seq/'
     context_win = 5
 
-    with open(gentle_inputs_path, 'r', encoding='utf8') as fp:
-        gentle_inputs = fp.read().split('\n')
+    gentle_inputs = read_gentleinput_list(gentle_inputs_path)
+    print(gentle_inputs)
+    quit()
 
     sequence_list = []
     for file in tqdm(gentle_inputs):
