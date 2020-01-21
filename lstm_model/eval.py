@@ -25,6 +25,8 @@ def eval(model, X, gold, gi, k, tokenizer):
 
         if gold[i] != 1 and gold[i] in predicts[i]:
             correct += 1
+            # print(candidates)
+            # print(gold_label)
         total += 1
         
     accuracy = correct/total
