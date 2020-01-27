@@ -142,3 +142,5 @@ lstm_model/test1.py
 
 test_data/*
 *.tar.gz
+old/*
+playground/*
