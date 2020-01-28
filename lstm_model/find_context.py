@@ -6,7 +6,7 @@ import pickle
 from tqdm import tqdm
 from lm_lib import process_df
 from pathlib import Path
-import textgrids
+import tgt
 import json
 import argparse
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
         textgrid_file = "{}{}TextGrid".format(textgrid_file_path, f)
 
-        words = textgrids.TextGrid(textgrid_file)['words']
+        words = tgt.read_textgrid(textgrid_file).tiers[0].intervals
 
         j = 0
         context = ["<s>"]*(context_win+1)
@@ -52,8 +52,8 @@ if __name__ == "__main__":
             word_tg = words[j]
 
             while word_tg.text != word_df["wordtoken"] and\
-                word_tg.xmin != word_df["start"] and\
-                word_tg.xmax != word_df["end"]:
+                word_tg.start_time != word_df["start"] and\
+                word_tg.end_time != word_df["end"]:
 
                 j += 1
                 word_tg = words[j]
@@ -74,5 +74,5 @@ if __name__ == "__main__":
 
     df_output = json.dumps(df_context, indent=4)
     
-    with open("top10-dataframe-context.json", "w") as fp:
+    with open("../trained/top10-dataframe-context.json", "w") as fp:
         fp.write(df_output)
