@@ -1,8 +1,6 @@
 """Prepare sequences for tokenizer and training
 """
-import sys, os
-path = os.path.dirname(sys.path[0])
-sys.path.insert(0, path)
+import lib_path
 
 import argparse
 from lm_lib.text import TasaText
