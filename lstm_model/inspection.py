@@ -1,8 +1,11 @@
+import lib_path
+
 import argparse
 from keras.models import load_model
 import pickle
 import json
 import numpy as np
+from lm_lib import math
 
 
 def acc(gold, speech, combine):
@@ -16,6 +19,10 @@ def acc(gold, speech, combine):
             correct_s += 1
         if g == c:
             correct_c += 1
+
+
+        if g == c and g == s:
+            print(g)
 
     return total, correct_s, correct_c
 
@@ -41,8 +48,6 @@ if __name__ == "__main__":
     print("Load df...")
     data = json.load(open(df_context_path, 'r'))
 
-    tt = cst = cct = 0
-
     for f, v in data.items():
         lines = [" ".join(t["context"][:context_win]) for t in v]
         sequences = tokenizer.texts_to_sequences(lines)
@@ -67,22 +72,34 @@ if __name__ == "__main__":
             for c, p in zip(candidates_index, predicts_raw)]
         predicts_combine = np.array(predicts_combine)
 
-        total, correct_s, correct_c = acc(gold,
-            predicts_speech, predicts_combine)
-
-        tt += total
-        cst += correct_s
-        cct += correct_c
-        print("="*10)
-
-        print("Total: {}, Correct_s: {}, Correct_c: {}, Accuracy_c: {}".format(
-            total, correct_s, correct_c, (correct_c-correct_s)/total))
-
-        print("Accumulated: Total: {}, Correct_s_a: {}, Correct_c: {},\
-            Accuracy_c: {}"
-            .format(tt, cst, cct, (cct-cst)/tt))
 
 
+
+
+        predicts_top_k = math.argmax_top_k(predicts_raw, 10)
+
+        for g, pk, c, pr, ci, pc in zip(gold, predicts_top_k, candidates,
+                predicts_raw, candidates_index, predicts_combine):
+            g = tokenizer.index_word[g]
+            # pk = [tokenizer.index_word[x] for x in pk]
+            pk_d = {tokenizer.index_word[x]: pr[x] for x in pk}
+            c_d = {c.split(" ")[x]: pr[ci][x] for x in range(10)}
+            pc = tokenizer.index_word[pc]
+
+            # if g in pk:
+            print("\n"*1)
+            print("="*10)
+            print("Gold: {}".format(g))
+            print("Prediction Combine: {}".format(pc))
+            print("Prediction: {}".format(pk_d))
+            print("Candidates: {}".format(c))
+            print("{}".format(c_d))
+
+        # total, correct_s, correct_c = acc(gold,
+        #     predicts_speech, predicts_combine)
+
+        # print("Total: {}, Correct_s: {}, Correct_c: {}, Acc: N/A".format(
+        #     total, correct_s, correct_c))
         
 
 
