@@ -92,7 +92,7 @@ if __name__ == '__main__':
     # vocab_size = len(tokenizer.word_index) + 1
     vocab_size = min((tokenizer.num_words, len(tokenizer.word_index) + 1))
 
-    X, y = sequences[:, :-1], sequences[:, -1]
+    X, y = sequences[:, 1:], sequences[:, 0]
     total_samples = len(X)
     seq_length = X.shape[1]
 
