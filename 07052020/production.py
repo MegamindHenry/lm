@@ -17,77 +17,72 @@ from tqdm import tqdm
 
 def read(file_path):
     df = pandas.read_csv(file_path, index_col=0)
-    df['prev_prob'] = 0.0
-    df['next_prob'] = 0.0
     return df
 
 
 def write(df):
+    # df.to_csv('output/play_predicted.csv')
     df.to_csv('output/homophone_in_sequence_predicted.csv')
 
 
-def predict(model, df, tokenizer):
-    prev_words = df['prev_word'].to_list()
-    print(prev_words)
-    lines = [f'{w}' for w in prev_words]
-    lines = [str(w) for w in prev_words]
-    lines = [w for w in prev_words]
-    for i, l in enumerate(lines):
-        if type(l) == type(''):
-            continue
-        print(l, i)
-        print(type(l))
-    sequences = tokenizer.texts_to_sequences(lines)
-    print(sequences)
+def step_generator(total, step):
+    n = 0
+    while (n+1)*step < total:
+        yield n*step, (n+1)*step
+        n += 1
+    yield n*step, total
 
 
-def predict_by_line(model, df, tokenizer):
-    for i, row in tqdm(df.iterrows()):
-        try:
-            prev_word = row['prev_word']
-            prev_word = tokenizer.texts_to_sequences([prev_word])
-            next_word = row['next_word']
-            next_word = tokenizer.texts_to_sequences([next_word])
-            homophone = row['homophone']
-            homophone = tokenizer.texts_to_sequences([homophone])
+def predict_step(prev_model, next_model, df, tokenizer, start, end,\
+    replace_start_end=True):
 
-            prev_prediction = model.predict(prev_word)[0][homophone[0]]
-            next_prediction = model.predict(next_word)[0][homophone[0]]
-            
-            # print(df[i]['prev_prob'])
-            row['prev_prob'] = prev_prediction
-            row['next_prob'] = next_prediction
-        except:
-            pass
+    df_batch = df[start:end].fillna(
+        {'prev_word':'<s>', 'next_word':'</s>'})
+    prev_words = df_batch['prev_word'].to_list()
+    next_words = df_batch['next_word'].to_list()
+    homophones = df_batch['homophone'].to_list()
+    prev_words_sequences = np.array(tokenizer.texts_to_sequences(prev_words))
+    next_words_sequences = np.array(tokenizer.texts_to_sequences(next_words))
+    homophones_sequences = np.array(tokenizer.texts_to_sequences(homophones)).flatten()
+
+    prev_prediction_raw = prev_model.predict(prev_words_sequences)
+    next_prediction_raw = next_model.predict(next_words_sequences)
+
+    length = len(homophones_sequences)
+
+    prev_prediction = prev_prediction_raw[np.arange(length), homophones_sequences]
+    next_prediction = next_prediction_raw[np.arange(length), homophones_sequences]
+    
+    df.loc[start:end-1, 'prev_prob'] = prev_prediction
+    df.loc[start:end-1, 'next_prob'] = next_prediction
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='prepare context words for tasa corpus')
-    parser.add_argument('-tp', action="store", dest="tokenizer_path", type=str, default='trained/tokenizer.pkl', help='tokenizer save path')
-    # parser.add_argument('-sp', action="store", dest="sequences_path", type=str, default='trained/sequences.pkl', help='sequences save path')
-    # parser.add_argument('-ed', action="store", dest="embed_dim", type=int,
-    #     default=300, help='embedding layer dim')
-    # parser.add_argument('-lc', action="store", dest="lstm_cells", type=int,
-    #     default=128, help='lstm cells')
-    # parser.add_argument('-bs', action="store", dest="batch_size", type=int,
-    #     default=256, help='batch_size')
+    parser.add_argument('-tp', action="store", dest="tokenizer_path", type=str,
+        default='trained/tokenizer.pkl', help='tokenizer save path')
+    parser.add_argument('-s', action='store', dest='step', type=int,
+        default=16384, help='how much steps per batch when predicting')
 
     args = parser.parse_args()
 
     tokenizer_path = args.tokenizer_path
-    # sequences_path = args.sequences_path
-    # embed_dim = args.embed_dim
-    # lstm_cells = args.lstm_cells
-    # batch_size = args.batch_size
+    step = args.step
 
     print('Load tokenizer...')
     tokenizer = load(open(tokenizer_path, 'rb'))
 
-    model = load_model('trained/model.h5')
+    prev_model = load_model('trained/prev_model.h5')
+    next_model = load_model('trained/next_model.h5')
 
-    # vocab_size = len(tokenizer.word_index) + 1
     vocab_size = min((tokenizer.num_words, len(tokenizer.word_index) + 1))
 
+    # df = read('output/play.csv')
     df = read('output/homophone_in_sequence.csv')
-    predict_by_line(model, df, tokenizer)
+    total = len(df)
+    pbar = tqdm(total=total)
+    for s, e in step_generator(total, step):
+        predict_step(prev_model, next_model, df, tokenizer, s, e)
+        pbar.update(step)
+    pbar.close()
     write(df)
