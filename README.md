@@ -39,7 +39,7 @@ This is a lm project for hiwi.
 ## LSTM Instructions
 ### Train LSTM model with tasa Corpus
 1. install all dependencies `pip3 install -r requirements.txt`
-2. create data folder and transfer data (by default tasaTrain.txt is needed)
+2. create data folder, transfer data (by default tasaTrain.txt is needed) and split the data with `python3 train_test_split.py` in the data dir
 3. run `python3 prepare_sequences.py`
 4. run `python3 tokenization.py`
 5. run `python3 train.py`
