@@ -5,3 +5,4 @@ tqdm==4.32.2
 tensorflow==1.15.0
 pandas==0.25.3
 tgt==1.4.4
+h5py==2.10.0
