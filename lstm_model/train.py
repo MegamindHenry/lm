@@ -111,8 +111,8 @@ if __name__ == '__main__':
     train_generator = data_generator(X_train, y_train, train_samples, batch_size, vocab_size)
     dev_generator = data_generator(X_dev, y_dev, dev_samples, batch_size, vocab_size)
 
-    es = EarlyStopping(patience=20, restore_best_weights=True)
+    es = EarlyStopping(patience=1, restore_best_weights=True)
 
-    model.fit_generator(generator=train_generator, validation_data=dev_generator, samples_per_epoch=samples_per_epoch, validation_steps=validation_steps, nb_epoch=100, callbacks=[es])
+    model.fit_generator(generator=train_generator, validation_data=dev_generator, samples_per_epoch=samples_per_epoch, validation_steps=validation_steps, nb_epoch=10, callbacks=[es])
 
     model.save('../trained/demo_model.h5')

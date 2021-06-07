@@ -26,7 +26,7 @@ def save_seq(path, tts_sequences):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='prepare context words for tasa corpus')
     parser.add_argument('-cw', action="store", dest="context_win", type=int, default=5, help='set context windows')
-    parser.add_argument('-sp', action="store", dest="save_path", type=str, default='trained', help='set save path')
+    parser.add_argument('-sp', action="store", dest="save_path", type=str, default='../trained', help='set save path')
     parser.add_argument('-sn', action="store", dest="seq_name", type=str, default='sequences', help='seq file name')
     parser.add_argument('-c', action="store", dest="corpus", type=str, default='tasaTrain.txt', help='set train corpus path')
 
